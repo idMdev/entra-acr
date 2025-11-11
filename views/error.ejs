@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="/">Entra ACR Management</a>
+            </div>
+            <div class="navbar-menu">
+                <a href="/admin/signin">Admin</a>
+                <a href="/user">User</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="error-page">
+            <h1><%= error.status || 'Error' %></h1>
+            <h2><%= message %></h2>
+            
+            <% if (error.stack && error.status !== 404) { %>
+                <pre class="error-stack"><%= error.stack %></pre>
+            <% } %>
+            
+            <a href="/" class="btn btn-primary">Go Home</a>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Entra ACR Management System</p>
+        </div>
+    </footer>
+</body>
+</html>
