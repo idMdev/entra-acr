@@ -1,5 +1,5 @@
 const msal = require('@azure/msal-node');
-const config = require('../config/config');
+const config = require('../../config/config');
 
 const msalConfig = {
     auth: config.auth,

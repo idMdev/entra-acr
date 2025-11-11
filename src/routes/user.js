@@ -11,7 +11,8 @@ router.get('/', async (req, res) => {
         
         res.render('user/index', {
             title: 'User Interface',
-            authContexts: authContexts
+            authContexts: authContexts,
+            error: null
         });
     } catch (error) {
         console.error('Error loading user interface:', error);
