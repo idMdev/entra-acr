@@ -26,6 +26,12 @@ async function getAuthenticationContexts(accessToken) {
  * Fetch a specific authentication context by ID
  */
 async function getAuthenticationContextById(accessToken, contextId) {
+    // Validate contextId to prevent URL injection
+    // Valid context IDs are in format c1-c99 or similar patterns
+    if (!contextId || typeof contextId !== 'string' || !/^[a-zA-Z0-9\-_]+$/.test(contextId)) {
+        throw new Error('Invalid context ID format');
+    }
+    
     const endpoint = `${config.resources.graphAPI.endpoint}v1.0/identity/conditionalAccess/authenticationContextClassReferences/${contextId}`;
     
     try {

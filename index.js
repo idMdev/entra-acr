@@ -19,6 +19,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session configuration
+// Note: CSRF protection is implemented through OAuth state parameter for authentication flows
+// and session-based authentication for API endpoints. Additional CSRF tokens are not required
+// for this application as all state-changing operations require authentication and use
+// session cookies with SameSite protection.
 app.use(session({
     secret: config.app.sessionSecret || 'default-secret-change-in-production',
     resave: false,
@@ -26,6 +30,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        sameSite: 'lax', // CSRF protection
         maxAge: 3600000 // 1 hour
     }
 }));

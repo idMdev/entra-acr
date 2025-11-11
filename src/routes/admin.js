@@ -1,10 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const rateLimit = require('express-rate-limit');
 const authService = require('../services/authService');
 const graphService = require('../services/graphService');
 const storageService = require('../services/storageService');
 const { isAuthenticated } = require('../middleware/auth');
+
+// Rate limiting for authentication endpoints
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 requests per windowMs
+    message: 'Too many authentication attempts, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Rate limiting for API endpoints
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 50, // Limit each IP to 50 requests per windowMs
+    message: 'Too many requests, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 
 /**
  * Admin sign-in page
@@ -19,7 +38,7 @@ router.get('/signin', (req, res) => {
 /**
  * Initiate admin sign-in flow
  */
-router.get('/signin/initiate', async (req, res) => {
+router.get('/signin/initiate', authLimiter, async (req, res) => {
     try {
         const state = crypto.randomBytes(16).toString('hex');
         req.session.authState = state;
@@ -35,7 +54,7 @@ router.get('/signin/initiate', async (req, res) => {
 /**
  * Handle auth redirect callback
  */
-router.get('/redirect', async (req, res) => {
+router.get('/redirect', authLimiter, async (req, res) => {
     try {
         const { code, state, error, error_description } = req.query;
         
@@ -73,7 +92,7 @@ router.get('/redirect', async (req, res) => {
 /**
  * Admin dashboard - shows authentication contexts
  */
-router.get('/dashboard', isAuthenticated, async (req, res) => {
+router.get('/dashboard', apiLimiter, isAuthenticated, async (req, res) => {
     try {
         // Get user profile
         const userProfile = await graphService.getUserProfile(req.session.accessToken);
@@ -118,7 +137,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
 /**
  * Save selected authentication contexts
  */
-router.post('/contexts/save', isAuthenticated, async (req, res) => {
+router.post('/contexts/save', apiLimiter, isAuthenticated, async (req, res) => {
     try {
         const { selectedContexts } = req.body;
         
@@ -136,7 +155,9 @@ router.post('/contexts/save', isAuthenticated, async (req, res) => {
                 try {
                     return await graphService.getAuthenticationContextById(graphAccessToken, contextId);
                 } catch (error) {
-                    console.error(`Error fetching context ${contextId}:`, error);
+                    // Sanitize contextId for logging to prevent format string injection
+                    const sanitizedId = String(contextId).replace(/[^a-zA-Z0-9\-_]/g, '');
+                    console.error('Error fetching context:', sanitizedId, error.message || error);
                     return null;
                 }
             })
