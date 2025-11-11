@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="/">Entra ACR Management</a>
+            </div>
+            <div class="navbar-menu">
+                <a href="/admin/signin" class="active">Admin</a>
+                <a href="/user">User</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h1>Admin Sign In</h1>
+                <p>Sign in with your Entra ID work or school account to manage authentication contexts.</p>
+                
+                <% if (error) { %>
+                    <div class="alert alert-error">
+                        <strong>Error:</strong> <%= error %>
+                    </div>
+                <% } %>
+                
+                <a href="/admin/signin/initiate" class="btn btn-primary btn-large">
+                    Sign in with Microsoft
+                </a>
+                
+                <div class="info-box">
+                    <h3>Required Permissions</h3>
+                    <ul>
+                        <li>User.Read - To access your profile</li>
+                        <li>Policy.Read.ConditionalAccess - To read authentication contexts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Entra ACR Management System</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="/">Entra ACR Management</a>
+            </div>
+            <div class="navbar-menu">
+                <a href="/admin/signin">Admin</a>
+                <a href="/user" class="active">User</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="user-interface">
+            <h1>User Interface</h1>
+            <p class="subtitle">Authentication Contexts</p>
+            
+            <% if (error) { %>
+                <div class="alert alert-error">
+                    <strong>Error:</strong> <%= error %>
+                </div>
+            <% } %>
+            
+            <div class="card">
+                <h2>Available Authentication Contexts</h2>
+                
+                <% if (authContexts && authContexts.length > 0) { %>
+                    <div class="context-list">
+                        <% authContexts.forEach(function(context) { %>
+                            <div class="context-item readonly">
+                                <div class="context-info">
+                                    <strong><%= context.displayName %></strong>
+                                    <span class="context-id">ID: <%= context.id %></span>
+                                    <% if (context.description) { %>
+                                        <p class="context-description"><%= context.description %></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <div class="empty-state">
+                        <p>No authentication contexts have been configured yet.</p>
+                        <p>Please contact your administrator to configure authentication contexts.</p>
+                    </div>
+                <% } %>
+            </div>
+            
+            <div class="info-box">
+                <p><em>This is a placeholder user interface. User authentication and context-aware features will be implemented in future updates.</em></p>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Entra ACR Management System</p>
+        </div>
+    </footer>
+</body>
+</html>
