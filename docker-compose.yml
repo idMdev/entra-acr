@@ -6,13 +6,13 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "443:3000"
     environment:
       - NODE_ENV=production
       - TENANT_ID=${TENANT_ID}
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
-      - REDIRECT_URI=${REDIRECT_URI:-http://localhost:3000/auth/redirect}
+      - REDIRECT_URI=${REDIRECT_URI:-https://localhost/auth/redirect}
       - PORT=3000
       - SESSION_SECRET=${SESSION_SECRET}
       - AUTHORITY=https://login.microsoftonline.com/

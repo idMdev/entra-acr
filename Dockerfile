@@ -16,7 +16,7 @@ COPY . .
 # Create data directory for storing auth contexts
 RUN mkdir -p /app/data
 
-# Expose the application port
+# Expose the application port (internal container port)
 EXPOSE 3000
 
 # Set NODE_ENV to production

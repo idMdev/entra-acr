@@ -2,6 +2,15 @@
 
 This guide provides step-by-step instructions for deploying the Entra ACR Management application to Azure Container Services (Azure Container Apps or Azure Container Instances).
 
+## Important: Port Configuration
+
+**For production deployment on Azure Container Services:**
+- The container runs internally on port 3000
+- Azure Container Apps/Instances automatically exposes the service on **HTTPS port 443** externally via ingress
+- All redirect URIs must use **HTTPS** (e.g., `https://your-app.azurecontainerapps.io/auth/redirect`)
+- The PORT environment variable should be set to 3000 (internal container port)
+- External users access the application on HTTPS port 443 (no need to specify port in URL)
+
 ## Prerequisites
 
 - Azure subscription
@@ -136,6 +145,12 @@ az containerapp show \
 ## Option 2: Azure Container Instances (ACI)
 
 For simpler deployments without auto-scaling requirements.
+
+**Note**: Azure Container Instances does not provide automatic HTTPS/SSL termination like Container Apps. For production use with HTTPS on port 443, you need to:
+- Deploy Application Gateway or Azure Front Door in front of ACI
+- Use Container Apps (Option 1) which provides automatic HTTPS
+
+The example below shows HTTP deployment for development/testing purposes only.
 
 ### 1. Create Azure Container Registry (if not already created)
 

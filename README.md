@@ -26,7 +26,7 @@ Web application that supports Entra Conditional Access authentication context wi
 3. Configure the application:
    - **Name**: Entra ACR Management
    - **Supported account types**: Accounts in this organizational directory only
-   - **Redirect URI**: Web - `http://localhost:3000/auth/redirect`
+   - **Redirect URI**: Web - `https://your-app-url/auth/redirect` (for production) or `http://localhost:3000/auth/redirect` (for local development)
 4. After registration, note the **Application (client) ID** and **Directory (tenant) ID**
 5. Go to "Certificates & secrets":
    - Create a new client secret
@@ -60,12 +60,16 @@ cp .env.example .env
 TENANT_ID=your-tenant-id
 CLIENT_ID=your-client-id
 CLIENT_SECRET=your-client-secret
-REDIRECT_URI=http://localhost:3000/auth/redirect
+REDIRECT_URI=https://your-app-url/auth/redirect
 PORT=3000
 SESSION_SECRET=your-random-session-secret
 ```
 
+**Note**: For local development, you can use `http://localhost:3000/auth/redirect` as the redirect URI. For production deployment on Azure Container Services, use HTTPS redirect URI (e.g., `https://your-app.azurecontainerapps.io/auth/redirect`). The container runs internally on port 3000, but Azure Container Apps exposes it externally on HTTPS port 443.
+
 ## Running the Application
+
+### Local Development
 
 Start the server:
 ```bash
@@ -76,6 +80,12 @@ The application will be available at:
 - Main page: http://localhost:3000
 - Admin interface: http://localhost:3000/admin/signin
 - User interface: http://localhost:3000/user
+
+**Note**: For local development, use `PORT=3000` and `http://localhost:3000/auth/redirect` in your `.env` file.
+
+### Production Deployment
+
+For production deployment to Azure Container Services, the application runs on HTTPS port 443. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 
 ## Project Structure
 
