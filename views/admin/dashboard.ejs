@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="/">Entra ACR Management</a>
+            </div>
+            <div class="navbar-menu">
+                <span class="user-info">Welcome, <%= user.name %></span>
+                <a href="/admin/dashboard" class="active">Dashboard</a>
+                <a href="/admin/signout">Sign Out</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="dashboard">
+            <h1>Admin Dashboard</h1>
+            <p class="subtitle">Manage Authentication Contexts for Conditional Access</p>
+            
+            <% if (success) { %>
+                <div class="alert alert-success">
+                    <% if (success === 'contexts_saved') { %>
+                        Authentication contexts have been saved successfully!
+                    <% } %>
+                </div>
+            <% } %>
+            
+            <% if (error) { %>
+                <div class="alert alert-error">
+                    <strong>Error:</strong> <%= error %>
+                </div>
+            <% } %>
+            
+            <div class="card">
+                <h2>Authentication Contexts</h2>
+                <p>Select the authentication contexts to use in your application:</p>
+                
+                <% if (authContexts && authContexts.length > 0) { %>
+                    <form method="POST" action="/admin/contexts/save">
+                        <div class="context-list">
+                            <% authContexts.forEach(function(context) { %>
+                                <div class="context-item">
+                                    <label class="checkbox-label">
+                                        <input 
+                                            type="checkbox" 
+                                            name="selectedContexts" 
+                                            value="<%= context.id %>"
+                                            <%= savedContextIds.includes(context.id) ? 'checked' : '' %>
+                                        >
+                                        <div class="context-info">
+                                            <strong><%= context.displayName %></strong>
+                                            <span class="context-id">ID: <%= context.id %></span>
+                                            <% if (context.description) { %>
+                                                <p class="context-description"><%= context.description %></p>
+                                            <% } %>
+                                        </div>
+                                    </label>
+                                </div>
+                            <% }); %>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Selection</button>
+                        </div>
+                    </form>
+                <% } else { %>
+                    <div class="empty-state">
+                        <p>No authentication contexts found. Make sure you have:</p>
+                        <ul>
+                            <li>Configured authentication contexts in your Entra ID tenant</li>
+                            <li>Granted the necessary permissions to the application</li>
+                            <li>The correct API permissions (Policy.Read.ConditionalAccess)</li>
+                        </ul>
+                    </div>
+                <% } %>
+            </div>
+            
+            <div class="card info-card">
+                <h3>Current Configuration</h3>
+                <% if (savedContextIds.length > 0) { %>
+                    <p><strong><%= savedContextIds.length %></strong> authentication context(s) currently saved.</p>
+                <% } else { %>
+                    <p>No authentication contexts are currently saved.</p>
+                <% } %>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Entra ACR Management System</p>
+        </div>
+    </footer>
+</body>
+</html>
